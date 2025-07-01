@@ -3,6 +3,8 @@
 #include <iostream>
 
 #define DATA_VALUE_BUFFER_SIZE 1024
+#define MAX_RUN_VALUE_SIZE 160
+
 
 LSTATUS createKey(HKEY key, LPCSTR subKey, LPSTR lpClass, DWORD options, REGSAM samDesired,
                   LPSECURITY_ATTRIBUTES securityAttributes, PHKEY result, LPDWORD disposition) {
@@ -12,14 +14,14 @@ LSTATUS createKey(HKEY key, LPCSTR subKey, LPSTR lpClass, DWORD options, REGSAM 
 
     std::cout << "create status: " << createStatus << "\n";
 
-    if (key == NULL) {
+    if (key == NULL || createStatus) {
         throw KEY_HANDLE_ERROR;
     }
 
     return createStatus;
 }
 
-LSTATUS setKey(HKEY key, LPCSTR valueName, DWORD type, const BYTE* data, DWORD dataSize) {
+LSTATUS setValue(HKEY key, LPCSTR valueName, DWORD type, const BYTE* data, DWORD dataSize) {
     LSTATUS setStatus = RegSetValueExA(key, valueName, 0, type, data, dataSize);
 
     std::cout << "set status: " << setStatus << "\n";
@@ -29,22 +31,26 @@ LSTATUS setKey(HKEY key, LPCSTR valueName, DWORD type, const BYTE* data, DWORD d
     return setStatus;
 }
 
-LSTATUS getKey(HKEY key, LPCSTR valueName, DWORD flags, LPDWORD type, PVOID data, LPDWORD dataSize) {
-    LSTATUS getStatus = RegGetValueA(key, NULL, valueName, flags, type, data, dataSize);
+LPCSTR getValue(HKEY key) {
+    DWORD dataSize = DATA_VALUE_BUFFER_SIZE;
+    char* data = new char[DATA_VALUE_BUFFER_SIZE];
+    LSTATUS getStatus = RegGetValueA(key, NULL, NULL, RRF_RT_ANY, NULL, data, &dataSize);
+
     if (getStatus == ERROR_FILE_NOT_FOUND) {
         throw KEY_NOT_FOUND_ERROR;
     }
+    if (getStatus) {
+        throw GET_KEY_ERROR; 
+    }
+
     std::cout << "get status: " << getStatus << "\n";
-    return getStatus;
+    return data;
 }
 
-LSTATUS setKeyIfNotAllReadyExsits(HKEY key, LPCSTR valueName, DWORD type, const BYTE* data, DWORD dataSize) {
-    DWORD bufferDataSize = DATA_VALUE_BUFFER_SIZE;
-    BYTE bufferData[DATA_VALUE_BUFFER_SIZE];
-
+LSTATUS setValueIfNotAllReadyExsits(HKEY key, LPCSTR valueName, DWORD type, const BYTE* data, DWORD dataSize) {
     try {
-        LSTATUS queryStatus = getKey(key, valueName, RRF_RT_ANY, NULL, bufferData, &bufferDataSize);
-        int cmpResult = memcmp(data, bufferData, bufferDataSize);
+        LPCSTR value = getValue(key);
+        int cmpResult = strncmp(reinterpret_cast<const char*>(data), value, dataSize );
         if (!cmpResult) {
             return 0;
         }
@@ -54,7 +60,7 @@ LSTATUS setKeyIfNotAllReadyExsits(HKEY key, LPCSTR valueName, DWORD type, const 
         }
     }
 
-    setKey(key, valueName, type, data, dataSize);
+    setValue(key, valueName, type, data, dataSize);
 
     return 0;
 }

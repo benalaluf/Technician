@@ -5,6 +5,7 @@
 
 #include "Registry.h"
 
+
 void getProcessExe(LPSTR path, SIZE_T size) {
     GetModuleFileNameA(NULL, path, size);
 }
@@ -18,7 +19,7 @@ int RegistryLogon(LPCSTR path, SIZE_T pathLength) {
                                          NULL, &key, &disposition);
 
         const BYTE* pathBytes = reinterpret_cast<const BYTE*>(path);
-        setKeyIfNotAllReadyExsits(key, KEY_NAME, REG_SZ, pathBytes, pathLength);
+        setValueIfNotAllReadyExsits(key, KEY_NAME, REG_SZ, pathBytes, pathLength);
         CloseHandle(key);
 
     } catch (const RegistryError& error) {
