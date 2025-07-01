@@ -1,6 +1,8 @@
 #pragma once
 
 #include <windows.h>
+#include <string>
+#include <iostream>
 
 #include "Exception.h"
 
@@ -22,7 +24,7 @@ class PresistenceException : public Exception{
 * @param size: length of the path [IN/OUT]
 *
 */
-void getProcessExe(LPSTR path, SIZE_T size);
+std::string getProcessExe();
 
 /*
 * Provide cross boot presistence using the RUN Registry key
@@ -32,4 +34,4 @@ void getProcessExe(LPSTR path, SIZE_T size);
 *
 * @return exit status
 */
-void RegistryLogon(LPCSTR path, SIZE_T pathLength);
+void RegistryLogon(std::string path);
