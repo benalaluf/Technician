@@ -5,16 +5,18 @@
 
 #include "Registry.h"
 
+void getProcessExe(LPSTR path, SIZE_T size) {
+    GetModuleFileNameA(NULL, path, size);
+}
+
 int RegistryLogon(LPCSTR path, SIZE_T pathLength) {
+    std::cout << path << "\n";
     try {
         HKEY key;
         DWORD disposition;
         LSTATUS createStatus = createKey(HKEY_CURRENT_USER, RUN_KEY, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS,
                                          NULL, &key, &disposition);
 
-        std::cout << "create status: " << createStatus;
-
-        std::cout << " disposition: " << disposition << "\n";
         const BYTE* pathBytes = reinterpret_cast<const BYTE*>(path);
         setKeyIfNotAllReadyExsits(key, KEY_NAME, REG_SZ, pathBytes, pathLength);
         CloseHandle(key);

