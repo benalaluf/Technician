@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Agent.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mutex.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="Registry.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Agent.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="Mutex.h" />
     <ClInclude Include="PopUp.h" />
