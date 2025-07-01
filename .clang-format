@@ -1,0 +1,9 @@
+---
+BasedOnStyle: Microsoft
+IndentWidth: 4
+---
+Language: Cpp
+DerivePointerAlignment: false
+BreakBeforeBraces: Attach 
+PointerAlignment: Left
+ColumnLimit: 120
