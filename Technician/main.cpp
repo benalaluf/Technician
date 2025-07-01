@@ -11,9 +11,10 @@ int main(int argc, char* argv[]) {
 
     if (wait != 0) {
         std::cout << "Process allready running\n";
-        exit(1);
+        return 1;
     }
-
+    
+    //cpp
     char path[MAX_PATH];
     
     getProcessExe(path, MAX_PATH);

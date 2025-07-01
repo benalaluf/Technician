@@ -15,5 +15,5 @@ HANDLE Mutex::getHandle() const {
 }
 
 DWORD Mutex::waitForSingleObject(DWORD milliseconds) {
-    return WaitForSingleObject(m_handle, 0);
+    return WaitForSingleObject(m_handle, milliseconds);
 }
