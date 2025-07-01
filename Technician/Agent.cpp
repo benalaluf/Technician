@@ -2,11 +2,14 @@
 
 #include <cstdio>
 #include <iostream>
+#include <vector>
 
 Agent::Agent() {
 }
 
 void Agent::start() {
+    m_conn = INVALID_SOCKET;
+
     initSocket();
     std::cout << "init socket\n";
     bindSocket();
@@ -25,16 +28,12 @@ void Agent::initSocket() {
     hints.ai_protocol = IPPROTO_TCP;
     hints.ai_flags = AI_PASSIVE;
 
-    // Resolve the local address and port to be used by the server
-    auto iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &m_addr);
-    if (iResult != 0) {
-        printf("getaddrinfo failed: %d\n", iResult);
+    int result = getaddrinfo(NULL, DEFAULT_PORT, &hints, &m_addr);
+    if (result != 0) {
+        printf("getaddrinfo failed: %d\n", result);
         WSACleanup();
-        // return 1;
+        throw AgentException(1, "initSocket getaddrinfo");
     }
-
-    m_conn = INVALID_SOCKET;
-    // Create a SOCKET for the server to listen for client connections
 
     m_conn = socket(m_addr->ai_family, m_addr->ai_socktype, m_addr->ai_protocol);
 
@@ -42,18 +41,18 @@ void Agent::initSocket() {
         printf("Error at socket(): %ld\n", WSAGetLastError());
         freeaddrinfo(m_addr);
         WSACleanup();
-        // return 1;
+        throw AgentException(1, "initSocket socket()");
     }
 }
 
 void Agent::bindSocket() {
-    auto iResult = bind(m_conn, m_addr->ai_addr, (int)m_addr->ai_addrlen);
-    if (iResult == SOCKET_ERROR) {
+    int result = bind(m_conn, m_addr->ai_addr, (int)m_addr->ai_addrlen);
+    if (result == SOCKET_ERROR) {
         printf("bind failed with error: %d\n", WSAGetLastError());
         freeaddrinfo(m_addr);
         closesocket(m_conn);
         WSACleanup();
-        // return 1;
+        throw AgentException(1, "bindSocket bind()");
     }
 }
 
@@ -62,52 +61,64 @@ void Agent::listenSocket() {
         printf("Listen failed with error: %ld\n", WSAGetLastError());
         closesocket(m_conn);
         WSACleanup();
-        // return 1;
+        throw AgentException(1, "listen");
     }
 }
 
-void Agent::handleClient() {
+SOCKET Agent::agentAccept() {
     SOCKET ClientSocket = INVALID_SOCKET;
-
-    // Accept a client socket
     ClientSocket = accept(m_conn, NULL, NULL);
     if (ClientSocket == INVALID_SOCKET) {
         printf("accept failed: %d\n", WSAGetLastError());
         closesocket(m_conn);
         WSACleanup();
-        //return 1;
+        throw AgentException(1, "aggentAccept");
+    }
+    return ClientSocket;
+}
+
+void Agent::handleClient() {
+
+    SOCKET ClientSocket = agentAccept();
+
+    while (1) {
+        auto recvbuf = agentRecv(ClientSocket);
+   
+		if (!strncmp(recvbuf.data(), "PING", recvbuf.size())) {
+            agentSend(ClientSocket, NULL);
+		}
     }
 
-    #define DEFAULT_BUFLEN 512
+}
+void Agent::agentSend(SOCKET sock, char*  data) {
+    int iSendResult = send(sock, "PONG",5, 0);
+    if (iSendResult == SOCKET_ERROR) {
+        printf("send failed: %d\n", WSAGetLastError());
+        closesocket(sock);
+        WSACleanup();
+        throw AgentException(1, "send");
+    }
+    printf("Bytes sent: %d\n", iSendResult);
+}
 
-    char recvbuf[DEFAULT_BUFLEN];
-    int iResult, iSendResult;
+std::vector<char> Agent::agentRecv(SOCKET sock) {
+    std::vector<char> recvbuf(DEFAULT_BUFLEN);
+    int recvResult;
     int recvbuflen = DEFAULT_BUFLEN;
 
-    // Receive until the peer shuts down the connection
-    do {
-
-        iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-        if (iResult > 0) {
-            printf("Bytes received: %d\n", iResult);
-
-            // Echo the buffer back to the sender
-            iSendResult = send(ClientSocket, recvbuf, iResult, 0);
-            if (iSendResult == SOCKET_ERROR) {
-                printf("send failed: %d\n", WSAGetLastError());
-                closesocket(ClientSocket);
-                WSACleanup();
-                //return 1;
-            }
-            printf("Bytes sent: %d\n", iSendResult);
-        } else if (iResult == 0)
-            printf("Connection closing...\n");
-        else {
-            printf("recv failed: %d\n", WSAGetLastError());
-            closesocket(ClientSocket);
-            WSACleanup();
-            //return 1;
+    recvResult = recv(sock, recvbuf.data(), recvbuflen, 0);
+    std::cout << recvbuf.data();
+    if (recvResult <= 0) {
+        if (recvResult == 0) {
+            throw AgentException(recvResult, "connection closed");
+        }  else {
+            throw AgentException(recvResult, "agent Recv");
         }
+    }
 
-    } while (iResult > 0);
+    return recvbuf;
+}
+
+AgentException::AgentException(int status, std::string funcName) : Exception(status, funcName) {
+    // i know this empty
 }
