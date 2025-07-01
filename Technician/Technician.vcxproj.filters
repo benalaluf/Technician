@@ -37,6 +37,9 @@
     <ClCompile Include="Agent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SocketGuard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PopUp.h">
@@ -56,6 +59,9 @@
     </ClInclude>
     <ClInclude Include="Resilience.h">
     <ClInclude Include="Agent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketGuard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

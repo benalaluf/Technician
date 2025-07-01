@@ -5,18 +5,23 @@
 #include <vector>
 
 Agent::Agent() {
+    m_conn = INVALID_SOCKET;
 }
 
 void Agent::start() {
-    m_conn = INVALID_SOCKET;
 
-    initSocket();
-    std::cout << "init socket\n";
-    bindSocket();
-    std::cout << "bind socket\n";
-    listenSocket();
-    std::cout << "Listen....\n";
-    handleClient();
+    try {
+        initSocket();
+        std::cout << "init socket\n";
+        bindSocket();
+        std::cout << "bind socket\n";
+        listenSocket();
+        std::cout << "Listen....\n";
+        handleClient();
+    }
+    catch (const AgentException& error) {
+        std::cerr << "Error at: " << error.funcName << "\n";
+    }
 }
 
 void Agent::initSocket() {
@@ -31,7 +36,6 @@ void Agent::initSocket() {
     int result = getaddrinfo(NULL, DEFAULT_PORT, &hints, &m_addr);
     if (result != 0) {
         printf("getaddrinfo failed: %d\n", result);
-        WSACleanup();
         throw AgentException(1, "initSocket getaddrinfo");
     }
 
@@ -40,7 +44,6 @@ void Agent::initSocket() {
     if (m_conn == INVALID_SOCKET) {
         printf("Error at socket(): %ld\n", WSAGetLastError());
         freeaddrinfo(m_addr);
-        WSACleanup();
         throw AgentException(1, "initSocket socket()");
     }
 }
@@ -51,7 +54,6 @@ void Agent::bindSocket() {
         printf("bind failed with error: %d\n", WSAGetLastError());
         freeaddrinfo(m_addr);
         closesocket(m_conn);
-        WSACleanup();
         throw AgentException(1, "bindSocket bind()");
     }
 }
@@ -60,7 +62,6 @@ void Agent::listenSocket() {
     if (listen(m_conn, SOMAXCONN) == SOCKET_ERROR) {
         printf("Listen failed with error: %ld\n", WSAGetLastError());
         closesocket(m_conn);
-        WSACleanup();
         throw AgentException(1, "listen");
     }
 }
@@ -71,7 +72,6 @@ SOCKET Agent::agentAccept() {
     if (ClientSocket == INVALID_SOCKET) {
         printf("accept failed: %d\n", WSAGetLastError());
         closesocket(m_conn);
-        WSACleanup();
         throw AgentException(1, "aggentAccept");
     }
     return ClientSocket;
@@ -95,7 +95,6 @@ void Agent::agentSend(SOCKET sock, char*  data) {
     if (iSendResult == SOCKET_ERROR) {
         printf("send failed: %d\n", WSAGetLastError());
         closesocket(sock);
-        WSACleanup();
         throw AgentException(1, "send");
     }
     printf("Bytes sent: %d\n", iSendResult);
