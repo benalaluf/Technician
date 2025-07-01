@@ -6,7 +6,7 @@ int PopUp(LPCSTR text, LPCSTR caption) {
 
 void PopupLoop() {
     while (1) {
-        PopUp("MANAGMENT PROGRAM IS UP!", "virus");
+        PopUp(POPUP_LOOP_TEXT, POPUP_LOOP_CAPTION);
         Sleep(HOUR_IN_MILISECONDS);
     }
 }
