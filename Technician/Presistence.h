@@ -2,8 +2,18 @@
 
 #include <windows.h>
 
+#include "Exception.h"
+
 #define RUN_KEY  "Software\\Microsoft\\Windows\\CurrentVersion\\Run"
 #define KEY_NAME  "Technician"
+
+/*
+* Presisence exception class
+*/
+class PresistenceException : public Exception{
+  public:
+    PresistenceException(int status, std::string funcName);
+};
 
 /*
 * Gets the current process exe path 
@@ -22,4 +32,4 @@ void getProcessExe(LPSTR path, SIZE_T size);
 *
 * @return exit status
 */
-int RegistryLogon(LPCSTR path, SIZE_T pathLength);
+void RegistryLogon(LPCSTR path, SIZE_T pathLength);

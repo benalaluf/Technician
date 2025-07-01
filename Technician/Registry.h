@@ -3,14 +3,14 @@
 #include <string>
 #include <windows.h>
 
+#include "Exception.h"
+
 /*
  * Defines Errors for the Registry module.
  */
-class RegistryException {
+class RegistryException : public Exception {
   public:
     RegistryException(int status, std::string funcName);
-    int status;
-    std::string funcName;
 };
 
 /*

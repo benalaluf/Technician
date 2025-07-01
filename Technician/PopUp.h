@@ -14,7 +14,7 @@
 * @param text: text to display in the messagebox
 * @param caption: caption of the messagebox
 */
-int PopUp(LPCSTR text, LPCSTR caption);
+void PopUp(LPCSTR text, LPCSTR caption);
 
 /*
 * indecates the user the program is running with a popup,
