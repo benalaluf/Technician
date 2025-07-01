@@ -1,0 +1,26 @@
+# Visual Studio
+.vs/
+Debug/
+Release/
+x64/
+x86/
+*.user
+*.suo
+*.ncb
+*.sdf
+*.opensdf
+*.db
+*.opendb
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+*.exe
+*.dll
+*.obj
+*.pdb
+*.ilk
+*.log
+*.tlog
+*.idb
+*.pch
