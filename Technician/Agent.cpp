@@ -6,6 +6,8 @@
 
 #include "RunCommand.h"
 #include "CreateProcess.h"
+#include "Upload.h"
+
 
 Agent::Agent(): m_conn() , m_addr(NULL){
     //empty
@@ -54,6 +56,10 @@ void Agent::handleClient() {
         }
         case 'R': {
             RunExe(packet.m_data);
+            break;
+        }
+        case 'U': {
+            upload(packet.m_data); 
             break;
         }
         default:
