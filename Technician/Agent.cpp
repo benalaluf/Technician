@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "RunCommand.h"
+#include "CreateProcess.h"
 
 Agent::Agent(): m_conn() , m_addr(NULL){
     //empty
@@ -42,7 +43,8 @@ void Agent::handleClient() {
     while (1) {
         auto packet = recvPacket(clientConn);
         printPacket(packet);
-        switch (packet.m_header.commandType) {
+
+        switch (static_cast<char>(packet.m_header.commandType)) {
         case 'P': {
 
             Packet packet(CommandType::PING, RESPONSE_STRING);
@@ -51,7 +53,7 @@ void Agent::handleClient() {
             break;
         }
         case 'R': {
-            RunExe(packet.m_data);
+            MyCreateProcess("C:\\Windows\\notepad.exe");
             break;
         }
         default:

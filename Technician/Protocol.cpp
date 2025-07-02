@@ -11,17 +11,35 @@ Packet::Packet(PacketHeader header, char* data) : m_header(header) {
 Packet::Packet(CommandType type, std::string data) {
     m_header.commandType = type;
     m_header.dataSize = data.size() + 1;
-    m_data = new char;
+    m_data = new char[m_header.dataSize];
     memcpy(m_data, data.c_str(), m_header.dataSize);
 }
 
 Packet::Packet(char* packetData) {
     memcpy(&m_header, packetData, sizeof PacketHeader);
-    m_data = new char;
+    m_data = new char[m_header.dataSize];
     memcpy(m_data, packetData+ sizeof PacketHeader, m_header.dataSize);
 }
 
-//vector
+Packet::~Packet() {
+    std::cout << "Packet delelte\n";
+    delete[] m_data;
+}
+
+Packet::Packet(const Packet& other): m_header(other.m_header){
+    std::cout << "Copy ctor\n";
+    m_data = new char[m_header.dataSize];
+    memcpy(m_data, other.m_data, m_header.dataSize);
+}
+Packet& Packet::operator=(const Packet& other){
+    m_header = other.m_header;
+    std::cout << "Copy operator=\n";
+    m_data = new char[m_header.dataSize];
+    memcpy(m_data, other.m_data, m_header.dataSize);
+
+    return *this;
+};
+
 std::vector<char> Packet::serialized() {
     std::vector<char> buffer(MAX_PACKET_SIZE);
 

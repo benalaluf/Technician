@@ -43,6 +43,12 @@ class Packet {
     
     Packet(char* packetData);
 
+    ~Packet();
+
+    Packet(const Packet& other);
+
+    Packet& operator=(const Packet& other);
+
     std::vector<char> serialized();
 };
 
