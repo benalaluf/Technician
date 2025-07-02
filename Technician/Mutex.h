@@ -2,6 +2,8 @@
 
 #include <windows.h>
 
+#include "Exception.h"
+
 #define MUTEX_NAME "Technician"
 
 /*
@@ -25,4 +27,12 @@ class Mutex {
 
   private:
     HANDLE m_handle;
+};
+
+/*
+ * Defines Errors for the Mutex module.
+ */
+class MutexException : public Exception {
+  public:
+    MutexException(int status, std::string funcName);
 };
