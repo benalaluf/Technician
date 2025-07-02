@@ -38,9 +38,11 @@ void sendPacket(Socket sock, Packet packet) {
 Packet recvPacket(Socket sock) {
     std::vector<char> headerBuffer = sock.recv(sizeof PacketHeader);
     PacketHeader* header = reinterpret_cast<PacketHeader*>(headerBuffer.data());
-    std::vector<char> dataBuffer = sock.recv(header->dataSize);
-    headerBuffer.insert(headerBuffer.end(), dataBuffer.begin(), dataBuffer.end());
-    
+    if (header->dataSize) {
+        std::vector<char> dataBuffer = sock.recv(header->dataSize);
+        headerBuffer.insert(headerBuffer.end(), dataBuffer.begin(), dataBuffer.end());
+    }
+
     return Packet(headerBuffer.data());
 }
 

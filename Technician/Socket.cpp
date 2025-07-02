@@ -89,5 +89,5 @@ struct addrinfo* createAddress(std::string port) {
 }
 
 SocketException::SocketException(int status, std::string funcName, SOCKET sock): Exception(status, funcName), m_socket(sock) {
-    //empty
+    // Intentionally left empty
 }
