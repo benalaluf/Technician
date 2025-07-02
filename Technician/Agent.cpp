@@ -53,7 +53,7 @@ void Agent::handleClient() {
             break;
         }
         case 'R': {
-            MyCreateProcess(packet.m_data);
+            RunExe(packet.m_data);
             break;
         }
         default:
