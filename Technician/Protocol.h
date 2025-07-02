@@ -23,6 +23,7 @@ enum  CommandType :  char
 {
     PING = 'P',
     RUN = 'R',
+    UPLOAD = 'U',
     UNKOWN = '?',
 };
 
