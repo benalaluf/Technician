@@ -22,6 +22,7 @@
 enum  CommandType :  char
 {
     PING = 'P',
+    RUN = 'R',
     UNKOWN = '?',
 };
 
@@ -41,6 +42,12 @@ class Packet {
     Packet(CommandType type, std::string data);
     
     Packet(char* packetData);
+
+    ~Packet();
+
+    Packet(const Packet& other);
+
+    Packet& operator=(const Packet& other);
 
     std::vector<char> serialized();
 };

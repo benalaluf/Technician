@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Agent.cpp" />
+    <ClCompile Include="CreateProcess.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mutex.cpp" />
@@ -150,10 +151,13 @@
     <ClCompile Include="Protocol.cpp" />
     <ClCompile Include="Registry.cpp" />
     <ClCompile Include="Resilience.cpp" />
+    <ClCompile Include="RunCommand.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="SocketGuard.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CreateProcess.h" />
+    <ClInclude Include="RunCommand.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="Mutex.h" />

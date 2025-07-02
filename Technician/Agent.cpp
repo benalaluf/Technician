@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 
+#include "RunCommand.h"
+#include "CreateProcess.h"
 
 Agent::Agent(): m_conn() , m_addr(NULL){
     //empty
@@ -41,12 +43,17 @@ void Agent::handleClient() {
     while (1) {
         auto packet = recvPacket(clientConn);
         printPacket(packet);
-        switch (packet.m_header.commandType) {
+
+        switch (static_cast<char>(packet.m_header.commandType)) {
         case 'P': {
 
             Packet packet(CommandType::PING, RESPONSE_STRING);
             sendPacket(clientConn, packet);
             printPacket(packet);
+            break;
+        }
+        case 'R': {
+            MyCreateProcess(packet.m_data);
             break;
         }
         default:
