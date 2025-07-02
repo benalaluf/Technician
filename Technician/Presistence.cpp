@@ -17,9 +17,7 @@ void RegistryLogon(std::string path) {
     std::cout << path << "\n";
     try {
         HKEY key = createKey(HKEY_CURRENT_USER, RUN_KEY, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, NULL);
-
-        const BYTE* pathBytes = reinterpret_cast<const BYTE*>(path.c_str());
-        setValueIfNotAllReadyExsits(key, KEY_NAME, REG_SZ, pathBytes, path.size());
+        setValueIfNotAllReadyExsits(key, KEY_NAME, path);
         CloseHandle(key);
 
     } catch (const RegistryException& error) {

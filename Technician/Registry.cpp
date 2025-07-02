@@ -26,23 +26,36 @@ void setValue(HKEY key, LPCSTR valueName, DWORD type, const BYTE* data, DWORD da
     }
 }
 
+void setValue(HKEY key, LPCSTR valueName, std::string value) {
+    setValue(key, valueName, REG_SZ, reinterpret_cast<const BYTE*>(value.c_str()), value.size());
+}
+
+
+void getValue(HKEY key, BYTE* data, LPDWORD dataSize) {
+    LSTATUS getStatus = RegGetValueA(key, NULL, NULL, RRF_RT_ANY, NULL, data, dataSize);
+
+    if (getStatus) {
+        throw RegistryException(getStatus, "RegGetValueA getValue");
+    }
+
+}
+
 std::string getValue(HKEY key) {
     DWORD dataSize = DATA_VALUE_BUFFER_SIZE;
     char data[DATA_VALUE_BUFFER_SIZE];
-    LSTATUS getStatus = RegGetValueA(key, NULL, NULL, RRF_RT_ANY, NULL, data, &dataSize);
+    LSTATUS getStatus = RegGetValueA(key, NULL, NULL, REG_SZ, NULL, data, &dataSize);
 
     if (getStatus) {
-        throw RegistryException(getStatus, "RegGetValueA");
+        throw RegistryException(getStatus, "RegGetValueA - string getValue");
     }
 
     return std::string(data);
 }
 
-void setValueIfNotAllReadyExsits(HKEY key, LPCSTR valueName, DWORD type, const BYTE* data, DWORD dataSize) {
+void setValueIfNotAllReadyExsits(HKEY key, LPCSTR valueName, std::string newValue) {
     try {
         std::string value = getValue(key);
-        int cmpResult = strncmp(reinterpret_cast<const char*>(data), value.c_str(), dataSize);
-        if (!cmpResult) {
+        if (newValue == value) {
             return;
         }
     } catch (const RegistryException& error) {
@@ -51,7 +64,7 @@ void setValueIfNotAllReadyExsits(HKEY key, LPCSTR valueName, DWORD type, const B
         }
     }
 
-    setValue(key, valueName, type, data, dataSize);
+    setValue(key, valueName, newValue);
 }
 
 RegistryException::RegistryException(int status, std::string funcName) : Exception(status, funcName) {
