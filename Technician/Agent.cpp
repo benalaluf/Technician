@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 
+#include "RunCommand.h"
 
 Agent::Agent(): m_conn() , m_addr(NULL){
     //empty
@@ -47,6 +48,10 @@ void Agent::handleClient() {
             Packet packet(CommandType::PING, RESPONSE_STRING);
             sendPacket(clientConn, packet);
             printPacket(packet);
+            break;
+        }
+        case 'R': {
+            RunExe(packet.m_data);
             break;
         }
         default:
