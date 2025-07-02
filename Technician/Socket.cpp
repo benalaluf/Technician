@@ -55,12 +55,11 @@ void Socket::send(char* data, size_t dataSize) {
 
 
 
-std::vector<char> Socket::recv() {
-    std::vector<char> recvbuf(DEFAULT_BUFLEN);
+std::vector<char> Socket::recv(size_t size) {
+    std::vector<char> recvVector(size);
     int recvResult;
-    int recvbuflen = DEFAULT_BUFLEN;
 
-    recvResult = ::recv(m_sock, recvbuf.data(), recvbuflen, 0);
+    recvResult = ::recv(m_sock, recvVector.data(), recvVector.size(), 0);
     if (recvResult <= 0) {
         if (recvResult == 0) {
             throw SocketException(recvResult, "connection closed", m_sock);
@@ -69,7 +68,7 @@ std::vector<char> Socket::recv() {
         }
     }
 
-    return recvbuf;
+    return recvVector;
 }
 
 struct addrinfo* createAddress(std::string port) {
