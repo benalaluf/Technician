@@ -11,15 +11,19 @@
 #pragma comment(lib, "Ws2_32.lib")
 
 #include <vector>
+#include <string>
 
 #include "Exception.h"
 
 #define DEFAULT_PORT "1337"
 #define DEFAULT_BUFLEN 512
+#define REQUEST_STRING "PING"
+#define RESPONSE_STRING "PONG"
 
 class AgentException : public Exception {
   public:
-    AgentException(int status, std::string funcName);
+    SOCKET m_socket;
+    AgentException(int status, std::string funcName, SOCKET sock);
 };
 
 class Agent {
@@ -33,8 +37,8 @@ class Agent {
     void listenSocket();
     SOCKET agentAccept();
     void handleClient();
-
-    void agentSend(SOCKET sock, char* data);
+    void agentSend(SOCKET sock, char* data, size_t dataSize);
+    void agentSend(SOCKET sock, std::string message);
     std::vector<char> agentRecv(SOCKET sock);
 
 };
