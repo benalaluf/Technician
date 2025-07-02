@@ -1,3 +1,4 @@
+#pragma once
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -15,7 +16,6 @@
 
 #include "Exception.h"
 
-#define DEFAULT_BUFLEN 512
 
 class SocketException : public Exception {
   public:
@@ -34,7 +34,7 @@ class Socket {
     void listen();
     Socket accept();
     void send(char* data, size_t dataSize);
-    std::vector<char> recv();
+    std::vector<char> recv(size_t size);
 
 };
     

@@ -40,6 +40,7 @@ Packet& Packet::operator=(const Packet& other){
     return *this;
 };
 
+
 std::vector<char> Packet::serialized() {
     std::vector<char> buffer(MAX_PACKET_SIZE);
 
@@ -56,6 +57,7 @@ void sendPacket(Socket sock, Packet packet) {
 Packet recvPacket(Socket sock) {
     std::vector<char> headerBuffer = sock.recv(sizeof PacketHeader);
     PacketHeader* header = reinterpret_cast<PacketHeader*>(headerBuffer.data());
+
     if (header->dataSize) {
         std::vector<char> dataBuffer = sock.recv(header->dataSize);
         headerBuffer.insert(headerBuffer.end(), dataBuffer.begin(), dataBuffer.end());

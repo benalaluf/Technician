@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 
+#include "Protocol.h"
 #include "Exception.h"
 
 #define DEFAULT_PORT "1337"
