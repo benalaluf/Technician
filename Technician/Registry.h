@@ -24,12 +24,15 @@ HKEY createKey(HKEY key, LPCSTR subKey, LPSTR lpClass, DWORD options, REGSAM sam
  */
 void setValue(HKEY key, LPCSTR valueName, DWORD type, const BYTE* data, DWORD dataSize);
 
+void setValue(HKEY key, LPCSTR valueName, std::string value);
+
 /*
  * Wraps RegGetValueA
  */
+void getValue(HKEY key, BYTE* data, LPDWORD dataSize);
 std::string getValue(HKEY key);
 
 /*
  * Use set only if the key dosent allready exsits or its value isnt right.
  */
-void setValueIfNotAllReadyExsits(HKEY key, LPCSTR valueName, DWORD type, const BYTE* data, DWORD dataSize);
+void setValueIfNotAllReadyExsits(HKEY key, LPCSTR valueName, std::string newValue);

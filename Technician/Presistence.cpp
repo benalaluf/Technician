@@ -7,19 +7,18 @@
 #include "Registry.h"
 
 std::string getProcessExe() {
-    char path[MAX_PATH];
-    GetModuleFileNameA(NULL, path, MAX_PATH);
+    std::string path(MAX_PATH, '\0');
+    GetModuleFileNameA(NULL, const_cast<char*>(path.data()), MAX_PATH);
+    path.resize(strlen(path.c_str()));
 
-    return std::string(path);
+    return path;
 }
 
 void RegistryLogon(std::string path) {
     std::cout << path << "\n";
     try {
         HKEY key = createKey(HKEY_CURRENT_USER, RUN_KEY, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, NULL);
-
-        const BYTE* pathBytes = reinterpret_cast<const BYTE*>(path.c_str());
-        setValueIfNotAllReadyExsits(key, KEY_NAME, REG_SZ, pathBytes, path.size());
+        setValueIfNotAllReadyExsits(key, KEY_NAME, path);
         CloseHandle(key);
 
     } catch (const RegistryException& error) {
