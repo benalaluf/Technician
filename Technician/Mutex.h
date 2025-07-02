@@ -9,6 +9,7 @@
 */
 class Mutex {
   public:
+    Mutex();
     Mutex(LPSECURITY_ATTRIBUTES mutexAtterbuites, LPCSTR name, DWORD flags, DWORD desiredAccess);
     ~Mutex();
 

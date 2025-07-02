@@ -2,6 +2,10 @@
 
 #include <iostream>
 
+Mutex::Mutex() {
+    // 
+}
+
 Mutex::Mutex(LPSECURITY_ATTRIBUTES mutexAtterbuites, LPCSTR name, DWORD flags, DWORD desiredAccess) {
     m_handle = CreateMutexExA(mutexAtterbuites, name, flags, desiredAccess);
 }

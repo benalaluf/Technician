@@ -26,7 +26,6 @@ void setValue(HKEY key, LPCSTR valueName, DWORD type, const BYTE* data, DWORD da
     }
 }
 
-// TODO to std::string
 std::string getValue(HKEY key) {
     DWORD dataSize = DATA_VALUE_BUFFER_SIZE;
     char data[DATA_VALUE_BUFFER_SIZE];

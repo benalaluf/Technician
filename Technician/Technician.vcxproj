@@ -147,6 +147,7 @@
     <ClCompile Include="PopUp.cpp" />
     <ClCompile Include="Presistence.cpp" />
     <ClCompile Include="Registry.cpp" />
+    <ClCompile Include="Resilience.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exception.h" />
@@ -154,6 +155,7 @@
     <ClInclude Include="PopUp.h" />
     <ClInclude Include="Presistence.h" />
     <ClInclude Include="Registry.h" />
+    <ClInclude Include="Resilience.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
