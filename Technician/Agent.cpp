@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 
+
 Agent::Agent(): m_conn() , m_addr(NULL){
     //empty
 }
@@ -38,14 +39,25 @@ void Agent::handleClient() {
     Socket clientConn = m_conn.accept();
 
     while (1) {
-        auto recvbuf = clientConn.recv();
-        std::cout << "Recv: " << recvbuf.data() << "\n";
-        if (!strncmp(recvbuf.data(), REQUEST_STRING, recvbuf.size())) {
-            agentSend(clientConn, RESPONSE_STRING);
-            std::cout << "SEND: " << RESPONSE_STRING << "\n";
+        auto packet = recvPacket(clientConn);
+        printPacket(packet);
+        switch (packet.m_header.commandType) {
+        case 'P': {
+
+            Packet packet(CommandType::PING, RESPONSE_STRING);
+            sendPacket(clientConn, packet);
+            printPacket(packet);
+            break;
+        }
+        default:
+            Packet packet(CommandType::UNKOWN, "Unkown Commad");
+            sendPacket(clientConn, packet);
+            printPacket(packet);
+            break;
+        }
         }
     }
-}
+
 void Agent::agentSend(Socket sock, std::string message) {
     sock.send(const_cast<char*>(message.c_str()), message.size());
 }
